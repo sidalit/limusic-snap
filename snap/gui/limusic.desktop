@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=LiMusic
+Comment=Play YouTube Music and local music
+Exec=limusic %U
+Icon=${SNAP}/meta/gui/limusic.png
+Terminal=false
+Type=Application
+Categories=AudioVideo;Audio;Player;
+StartupWMClass=limusic

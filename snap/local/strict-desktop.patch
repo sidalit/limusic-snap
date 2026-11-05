@@ -1,0 +1,63 @@
+--- a/ui/src/lib/updater.svelte.ts
++++ b/ui/src/lib/updater.svelte.ts
+@@ -29,6 +29,7 @@
+ let pending: Update | null = null;
+ 
+ async function look(): Promise<boolean> {
++	if (import.meta.env.VITE_SNAP === '1') return false;
+ 	let u: Update | null;
+ 	const beta = (await getSettings()).update_channel === 'beta';
+ 	const current = await getVersion();
+@@ -131,6 +132,9 @@
+ /** From Settings: return the outcome so the modal can show it inline (a toast renders behind the
+  *  dialog). `error` picks the Alert variant. */
+ export async function checkForUpdatesInteractive(): Promise<{ message: string; error: boolean }> {
++	if (import.meta.env.VITE_SNAP === '1') {
++		return { message: 'Updates are managed by the Snap Store.', error: false };
++	}
+ 	updateState.checking = true;
+ 	try {
+ 		if (await look()) return { message: availableMessage(updateState.available!), error: false };
+--- a/src-tauri/src/commands.rs
++++ b/src-tauri/src/commands.rs
+@@ -418,6 +418,9 @@
+     // failure leaves the setting as it was. A dev build would register itself, and at login its
+     // window needs a vite server that isn't running.
+     if key == "autostart" {
++        if std::env::var_os("SNAP").is_some() {
++            return Err("Launch at login is unavailable in this snap.".into());
++        }
+         if tauri::is_dev() {
+             return Err(
+                 "autostart: a dev build can't register itself, use an installed build".into()
+@@ -2512,7 +2515,7 @@
+     #[cfg(target_os = "linux")]
+     {
+         use tauri::Manager;
+-        app.env().appimage.is_some()
++        std::env::var_os("SNAP").is_none() && app.env().appimage.is_some()
+     }
+     // Windows runs the NSIS installer and macOS swaps the .app bundle; both work however the app
+     // was installed.
+--- a/src-tauri/src/lib.rs
++++ b/src-tauri/src/lib.rs
+@@ -764,7 +764,7 @@
+             // pointing at nothing. So an installed build repoints an existing entry at itself.
+             // Only an existing one: `is_enabled` is false after a Task Manager disable on Windows,
+             // and that choice is the user's.
+-            if !tauri::is_dev() {
++            if !tauri::is_dev() && std::env::var_os("SNAP").is_none() {
+                 use tauri_plugin_autostart::ManagerExt;
+                 let al = app.autolaunch();
+                 if al.is_enabled().unwrap_or(false) {
+--- a/src-tauri/src/inhibit.rs
++++ b/src-tauri/src/inhibit.rs
+@@ -18,7 +18,7 @@
+ use zbus::Message;
+ 
+ /// The installed `limusic.desktop`, which is how the desktop finds a name and icon to show.
+-const APP_ID: &str = "limusic";
++const APP_ID: &str = "limusic_limusic";
+ const REASON: &str = "Playing music";
+ 
+ /// On both, the interface is named like the bus name.
