@@ -50,19 +50,14 @@ sudo snap connect limusic:removable-media
 
 ## Build
 
+The recipe builds the tagged source natively on amd64 and arm64. The single-instance D-Bus slot may require Snap Store approval before publication.
+
 ```bash
 git clone https://github.com/sidalit/limusic-snap.git
 cd limusic-snap
 sudo snap install snapcraft --classic
 snapcraft pack
 ```
-
-```bash
-sudo snap install --dangerous ./limusic_*.snap
-limusic
-```
-
-The recipe builds the tagged source natively on amd64 and arm64. The single-instance D-Bus slot may require Snap Store approval before publication.
 
 ## Support
 
