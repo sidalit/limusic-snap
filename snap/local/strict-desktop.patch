@@ -50,14 +50,3 @@
                  use tauri_plugin_autostart::ManagerExt;
                  let al = app.autolaunch();
                  if al.is_enabled().unwrap_or(false) {
---- a/src-tauri/src/inhibit.rs
-+++ b/src-tauri/src/inhibit.rs
-@@ -18,7 +18,7 @@
- use zbus::Message;
- 
- /// The installed `limusic.desktop`, which is how the desktop finds a name and icon to show.
--const APP_ID: &str = "limusic";
-+const APP_ID: &str = "limusic_limusic";
- const REASON: &str = "Playing music";
- 
- /// On both, the interface is named like the bus name.
