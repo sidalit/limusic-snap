@@ -48,6 +48,7 @@ apps:
       - home
       - network
       - network-bind
+      - network-status
       - removable-media
       - screen-inhibit-control
       - unity7
