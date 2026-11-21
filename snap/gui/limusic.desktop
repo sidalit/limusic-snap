@@ -6,4 +6,4 @@ Icon=${SNAP}/meta/gui/limusic.png
 Terminal=false
 Type=Application
 Categories=AudioVideo;Audio;Player;
-StartupWMClass=limusic
+StartupWMClass=limusic-app
