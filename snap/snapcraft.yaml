@@ -1,6 +1,6 @@
 name: limusic
 base: core26
-version: '1.3.0'
+version: '1.4.1'
 title: LiMusic
 icon: snap/gui/limusic.png
 summary: YouTube Music and local music with lyrics and gapless playback
